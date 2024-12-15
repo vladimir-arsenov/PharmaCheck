@@ -7,10 +7,9 @@ import androidx.room.PrimaryKey
 data class Medicine(
     @PrimaryKey val MedicineId: Int,
     val RusName: String?,
-    val ComiledComposition: String?,
-    val Dosage: String?,
+    val Indication: String?,
     val Interaction: String?,
+    val StorageCondition: String?,
+    val CompiledComposition: String?,
     val SideEffects: String?,
-    val StorageComposition: String?,
-    val Indication: String?
-)
+    val Dosage: String?)

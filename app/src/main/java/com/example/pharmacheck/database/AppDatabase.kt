@@ -1,4 +1,4 @@
-package com.example.pharmacheck
+package com.example.pharmacheck.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

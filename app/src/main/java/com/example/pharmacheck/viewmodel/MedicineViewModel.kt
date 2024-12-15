@@ -1,4 +1,4 @@
-package com.example.pharmacheck
+package com.example.pharmacheck.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +17,6 @@ class MedicineViewModel (private val repository: MedicineRepository) : ViewModel
     private val _interactions = MutableStateFlow<List<String>>(emptyList())
     val interactions: StateFlow<List<String>> = _interactions
 
-    // Получить все лекарства
     fun loadMedicines() {
         viewModelScope.launch {
             repository.getAllMedicines().collect { medicineList ->
@@ -26,7 +25,6 @@ class MedicineViewModel (private val repository: MedicineRepository) : ViewModel
         }
     }
 
-    // Поиск лекарств по запросу
     fun searchMedicines(query: String) {
         viewModelScope.launch {
             repository.searchMedicines(query).collect { result ->
@@ -35,7 +33,6 @@ class MedicineViewModel (private val repository: MedicineRepository) : ViewModel
         }
     }
 
-    // Проверка совместимости лекарств
     fun checkInteractions(selectedMedicineIds: List<String>) {
         viewModelScope.launch {
             val incompatibleMedicines = repository.getInteractions(selectedMedicineIds)
