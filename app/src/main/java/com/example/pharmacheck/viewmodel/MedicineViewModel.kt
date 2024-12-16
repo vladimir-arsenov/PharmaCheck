@@ -1,7 +1,9 @@
 package com.example.pharmacheck.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.pharmacheck.entity.Medicine
 import com.example.pharmacheck.repository.MedicineRepository
@@ -11,27 +13,10 @@ import kotlinx.coroutines.launch
 
 class MedicineViewModel (private val repository: MedicineRepository) : ViewModel() {
 
-    private val _medicines = MutableStateFlow<List<Medicine>>(emptyList())
-    val allMedicines: StateFlow<List<Medicine>> = _medicines
+    val allMedicines: LiveData<List<Medicine>> = repository.getAllMedicines().asLiveData()
 
     private val _interactions = MutableStateFlow<List<String>>(emptyList())
     val interactions: StateFlow<List<String>> = _interactions
-
-    fun loadMedicines() {
-        viewModelScope.launch {
-            repository.getAllMedicines().collect { medicineList ->
-                _medicines.value = medicineList
-            }
-        }
-    }
-
-    fun searchMedicines(query: String) {
-        viewModelScope.launch {
-            repository.searchMedicines(query).collect { result ->
-                _medicines.value = result
-            }
-        }
-    }
 
     fun checkInteractions(selectedMedicineIds: List<String>) {
         viewModelScope.launch {

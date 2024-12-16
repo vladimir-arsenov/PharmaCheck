@@ -15,12 +15,7 @@ interface MedicineDao {
     // Поиск лекарств по названию или действующему веществу
     @Query("""
         SELECT * FROM Medicine 
-        WHERE RusName LIKE :query 
-        OR MedicineId IN (
-            SELECT MedicineId FROM Molecule_Medicine
-            JOIN Molecule ON Molecule_Medicine.MoleculeID = Molecule.MoleculeID
-            WHERE Molecule.RusName LIKE :query
-        )
+        WHERE RusName LIKE :query
     """)
     fun searchMedicines(query: String): Flow<List<Medicine>>
 

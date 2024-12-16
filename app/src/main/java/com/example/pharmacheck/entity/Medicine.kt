@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "Medicine")
 data class Medicine(
     @PrimaryKey val MedicineId: Int,
-    val RusName: String?,
+    val RusName: String,
     val Indication: String?,
     val Interaction: String?,
     val StorageCondition: String?,

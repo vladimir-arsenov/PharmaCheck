@@ -12,12 +12,17 @@ import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.pharmacheck.database.AppDatabase
 import com.example.pharmacheck.entity.Medicine
-import com.example.pharmacheck.pages.HomePage
-import com.example.pharmacheck.pages.LoginPage
+import com.example.pharmacheck.pages.CompatibilityCheckScreen
+import com.example.pharmacheck.pages.CompatibilityResultScreen
+import com.example.pharmacheck.pages.HomeScreen
+import com.example.pharmacheck.pages.LoginScreen
 import com.example.pharmacheck.pages.MedicineDetailScreen
-import com.example.pharmacheck.pages.SignupPage
+import com.example.pharmacheck.pages.MedicineListScreen
+import com.example.pharmacheck.pages.SelectMedicineScreen
+import com.example.pharmacheck.pages.SignupScreen
 import com.example.pharmacheck.repository.MedicineRepository
 import com.example.pharmacheck.viewmodel.AuthViewModel
+import com.example.pharmacheck.viewmodel.CompatibilityViewModel
 import com.example.pharmacheck.viewmodel.MedicineViewModel
 import com.example.pharmacheck.viewmodel.MedicineViewModelFactory
 
@@ -28,20 +33,25 @@ class MainActivity : ComponentActivity() {
         val authViewModel : AuthViewModel by viewModels()
         authViewModel.signout()
         val database = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "app_database")
-            .createFromAsset("d.db")
+            .createFromAsset("data.db")
             .build()
 
         val repository = MedicineRepository(database.medicineDao())
 
         val medicineViewModel : MedicineViewModel by viewModels { MedicineViewModelFactory(repository) }
 
-        Toast.makeText(applicationContext, "HEy", Toast.LENGTH_LONG).show()
+        val compatibilityViewModel : CompatibilityViewModel by viewModels()
+
         setContent {
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = "home") {
-                composable("login"){ LoginPage(navController,authViewModel) }
-                composable("signup"){ SignupPage(navController, authViewModel) }
-                composable("home"){ HomePage(navController, authViewModel, medicineViewModel) }
+                composable("login"){ LoginScreen(navController,authViewModel) }
+                composable("signup"){ SignupScreen(navController, authViewModel) }
+                composable("home") { HomeScreen(navController, authViewModel) }
+                composable("medicineList"){ MedicineListScreen(navController, authViewModel, medicineViewModel) }
+                composable("compatibilityCheck") { CompatibilityCheckScreen(navController, compatibilityViewModel) }
+                composable("selectMedicine") { SelectMedicineScreen(navController, compatibilityViewModel, medicineViewModel) }
+                composable("compatibilityResult") { CompatibilityResultScreen(navController, compatibilityViewModel) }
                 composable("medicineDetail/{medicineId}") { backStackEntry ->
                     val medicineId = backStackEntry.arguments?.getString("medicineId")?.toInt()
                     val medicine : Medicine? = medicineId?.let { medicineViewModel.getMedicineById(it) }

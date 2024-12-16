@@ -21,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,21 +28,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.pharmacheck.viewmodel.MedicineViewModel
 import com.example.pharmacheck.entity.Medicine
 import com.example.pharmacheck.viewmodel.AuthState
 import com.example.pharmacheck.viewmodel.AuthViewModel
-import kotlinx.coroutines.launch
+import com.example.pharmacheck.viewmodel.MedicineViewModel
 
 @Composable
-fun HomePage(
+fun MedicineListScreen(
     navController: NavController,
     authViewModel: AuthViewModel,
     medicineViewModel: MedicineViewModel
 ) {
 
     val authState = authViewModel.authState.observeAsState()
-    val scope = rememberCoroutineScope()
     var query by remember { mutableStateOf("") }
     var medicines by remember { mutableStateOf<List<Medicine>>(emptyList()) }
 
@@ -67,9 +64,10 @@ fun HomePage(
                 modifier = Modifier.fillMaxWidth().padding(16.dp)
             )
             Button(onClick = {
-                scope.launch {
-                    medicineViewModel.searchMedicines(query)
-                }
+                medicines = medicineViewModel.allMedicines.value?.filter {
+                    it.RusName.contains(query, ignoreCase = true)
+                } ?: emptyList()
+
             }) {
                 Text("Поиск")
             }

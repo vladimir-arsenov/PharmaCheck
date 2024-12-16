@@ -27,10 +27,12 @@ import com.example.pharmacheck.viewmodel.AuthState
 import com.example.pharmacheck.viewmodel.AuthViewModel
 
 @Composable
-fun SignupPage(
+fun LoginScreen(
     navController: NavController,
     authViewModel: AuthViewModel
 ) {
+    
+    
     var email by remember {
         mutableStateOf("")
     }
@@ -43,26 +45,23 @@ fun SignupPage(
     val context = LocalContext.current
 
     LaunchedEffect(authState.value) {
-        when (authState.value) {
+        when(authState.value){
             is AuthState.Authenticated -> navController.navigate("home")
-            is AuthState.Error -> Toast.makeText(
-                context,
-                (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT
-            ).show()
-
+            is AuthState.Error -> Toast.makeText(context,
+                (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
             else -> Unit
         }
     }
-
+    
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Signup Page", fontSize = 32.sp)
-
+        Text(text = "Login Page", fontSize = 32.sp)
+        
         Spacer(modifier = Modifier.height(16.dp))
-
+        
         OutlinedTextField(
             value = email,
             onValueChange = {
@@ -86,21 +85,23 @@ fun SignupPage(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = {
-                authViewModel.signup(email, password)
-            }, enabled = authState.value != AuthState.Loading
-        ) {
-            Text(text = "Create account")
+        Button(onClick = {
+            authViewModel.login(email,password)
+        },
+            enabled = authState.value != AuthState.Loading
+            ) {
+            Text(text = "Login")
         }
+
 
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(onClick = {
-            navController.navigate("login")
+            navController.navigate("signup")
         }) {
-            Text(text = "Already have an account, Login")
+            Text(text = "Don't have an account, Signup")
         }
 
     }
+    
 }
